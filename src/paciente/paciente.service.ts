@@ -1,10 +1,35 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { CreatePacienteDto } from './dto/create-paciente.dto';
 import { UpdatePacienteDto } from './dto/update-paciente.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Paciente } from './entities/paciente.entity';
+import { Repository } from 'typeorm';
+
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class PacienteService {
+  constructor(
+    @InjectRepository(Paciente)
+    private readonly userRepository: Repository<Paciente>,
+  ) {}
+
   create(createPacienteDto: CreatePacienteDto) {
+    const { password, ...pacientData } = createPacienteDto;
+    console.log(password);
+
+    // try {
+    //   const paciente = this.userRepository.create({
+    //     ...pacientData,
+    //     password: bcrypt.hashSync(password, 10),
+    //   });
+    // } catch (error) {
+    //   this.handleDbError(error);
+    // }
     return 'This action adds a new paciente';
   }
 
@@ -22,5 +47,14 @@ export class PacienteService {
 
   remove(id: number) {
     return `This action removes a #${id} paciente`;
+  }
+  /* manage error */
+  // el NEVER no regresa nunca un valor
+  private handleDbError(error: any): never {
+    if (error.code === '23505') {
+      throw new BadRequestException(error.detail);
+    }
+    console.log(error);
+    throw new InternalServerErrorException('Please check server logs');
   }
 }

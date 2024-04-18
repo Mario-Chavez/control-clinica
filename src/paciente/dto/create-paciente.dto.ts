@@ -11,10 +11,6 @@ import {
 export class CreatePacienteDto {
   @IsNotEmpty()
   @IsString()
-  id_paciente: string;
-
-  @IsNotEmpty()
-  @IsString()
   @MinLength(3)
   @MaxLength(40)
   fullName: string;
