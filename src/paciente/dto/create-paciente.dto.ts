@@ -19,16 +19,14 @@ export class CreatePacienteDto {
   @IsString()
   birthdate: string;
 
-  @IsOptional()
   @IsString()
   @MinLength(3)
   @MaxLength(50)
-  adress?: string;
+  adress: string;
 
-  @IsOptional()
   @IsString()
-  @IsPhoneNumber()
-  phone?: string;
+  @MaxLength(11)
+  phone: string;
 
   @IsEmail()
   @IsNotEmpty()
@@ -48,7 +46,7 @@ export class CreatePacienteDto {
   @MinLength(2, {
     message: 'The obraSocial must be between 2 and 10 characters ',
   })
-  @MinLength(10, {
+  @MaxLength(10, {
     message: 'The obraSocial must be between 2 and 10 characters ',
   })
   obraSocial: string;

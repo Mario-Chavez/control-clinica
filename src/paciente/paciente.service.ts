@@ -18,18 +18,19 @@ export class PacienteService {
     private readonly userRepository: Repository<Paciente>,
   ) {}
 
-  create(createPacienteDto: CreatePacienteDto) {
+  async create(createPacienteDto: CreatePacienteDto) {
     const { password, ...pacientData } = createPacienteDto;
-    console.log(password);
 
-    // try {
-    //   const paciente = this.userRepository.create({
-    //     ...pacientData,
-    //     password: bcrypt.hashSync(password, 10),
-    //   });
-    // } catch (error) {
-    //   this.handleDbError(error);
-    // }
+    try {
+      const paciente = this.userRepository.create({
+        ...pacientData,
+        password: bcrypt.hashSync(password, 10),
+      });
+      await this.userRepository.save(paciente);
+      return paciente;
+    } catch (error) {
+      this.handleDbError(error);
+    }
     return 'This action adds a new paciente';
   }
 

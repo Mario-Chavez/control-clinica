@@ -5,9 +5,6 @@ export class Paciente {
   @PrimaryGeneratedColumn('uuid')
   id: number;
 
-  @Column({ unique: true })
-  id_paciente: string;
-
   @Column()
   fullName: string;
 
