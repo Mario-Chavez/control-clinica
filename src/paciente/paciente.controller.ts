@@ -40,7 +40,7 @@ export class PacienteController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.pacienteService.remove(+id);
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    return this.pacienteService.remove(id);
   }
 }

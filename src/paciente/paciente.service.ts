@@ -63,8 +63,9 @@ export class PacienteService {
     return await this.userRepository.save(paciente);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} paciente`;
+  async remove(id: string) {
+    const paciente = await this.findOne(id);
+    await this.userRepository.remove(paciente);
   }
   /* manage error */
   // el NEVER no regresa nunca un valor
