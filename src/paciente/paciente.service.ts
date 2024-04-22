@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { CreatePacienteDto } from './dto/create-paciente.dto';
 import { UpdatePacienteDto } from './dto/update-paciente.dto';
@@ -10,6 +11,7 @@ import { Paciente } from './entities/paciente.entity';
 import { Repository } from 'typeorm';
 
 import * as bcrypt from 'bcrypt';
+import { validate as isUUID } from 'uuid';
 
 @Injectable()
 export class PacienteService {
@@ -19,31 +21,46 @@ export class PacienteService {
   ) {}
 
   async create(createPacienteDto: CreatePacienteDto) {
-    const { password, ...pacientData } = createPacienteDto;
+    const { password, adress, ...pacientData } = createPacienteDto;
 
     try {
       const paciente = this.userRepository.create({
         ...pacientData,
+        address: adress,
         password: bcrypt.hashSync(password, 10),
       });
+
       await this.userRepository.save(paciente);
       return paciente;
     } catch (error) {
       this.handleDbError(error);
     }
-    return 'This action adds a new paciente';
   }
 
   findAll() {
-    return `This action returns all paciente`;
+    return this.userRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} paciente`;
+  async findOne(term: string) {
+    let paciente: Paciente;
+    if (isUUID(term)) {
+      paciente = await this.userRepository.findOneBy({ id: term });
+    } else {
+      paciente = await this.userRepository.findOneBy({ fullName: term });
+    }
+    if (!paciente)
+      throw new NotFoundException(`User whith termino:${term} not found`);
+
+    return paciente;
   }
 
-  update(id: number, updatePacienteDto: UpdatePacienteDto) {
-    return `This action updates a #${id} paciente`;
+  async update(id: string, updatePacienteDto: UpdatePacienteDto) {
+    const paciente = await this.userRepository.preload({
+      id: id,
+      ...updatePacienteDto,
+    });
+    if (!paciente) throw new NotFoundException(`User whith id:${id} not found`);
+    return await this.userRepository.save(paciente);
   }
 
   remove(id: number) {

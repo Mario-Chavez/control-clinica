@@ -3,7 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class Paciente {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column()
   fullName: string;
@@ -11,11 +11,11 @@ export class Paciente {
   @Column()
   birthdate: string;
 
-  @Column({ nullable: true })
-  address?: string;
+  @Column()
+  address: string;
 
-  @Column({ nullable: true })
-  phone?: string;
+  @Column()
+  phone: string;
 
   @Column()
   email: string;
