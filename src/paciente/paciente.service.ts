@@ -8,7 +8,7 @@ import { CreatePacienteDto } from './dto/create-paciente.dto';
 import { UpdatePacienteDto } from './dto/update-paciente.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Paciente } from './entities/paciente.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 
 import * as bcrypt from 'bcrypt';
 import { validate as isUUID } from 'uuid';
@@ -21,12 +21,12 @@ export class PacienteService {
   ) {}
 
   async create(createPacienteDto: CreatePacienteDto) {
-    const { password, adress, ...pacientData } = createPacienteDto;
+    const { password, address, ...pacientData } = createPacienteDto;
 
     try {
       const paciente = this.userRepository.create({
         ...pacientData,
-        address: adress,
+        address: address.trim(),
         password: bcrypt.hashSync(password, 10),
       });
 
@@ -46,7 +46,10 @@ export class PacienteService {
     if (isUUID(term)) {
       paciente = await this.userRepository.findOneBy({ id: term });
     } else {
-      paciente = await this.userRepository.findOneBy({ fullName: term });
+      paciente = await this.userRepository.findOne({
+        // busca con partes del nombre no solo con el name completo
+        where: { fullName: ILike(`%${term}%`) },
+      });
     }
     if (!paciente)
       throw new NotFoundException(`User whith termino:${term} not found`);
@@ -55,18 +58,24 @@ export class PacienteService {
   }
 
   async update(id: string, updatePacienteDto: UpdatePacienteDto) {
-    const paciente = await this.userRepository.preload({
-      id: id,
-      ...updatePacienteDto,
-    });
-    if (!paciente) throw new NotFoundException(`User whith id:${id} not found`);
-    return await this.userRepository.save(paciente);
+    try {
+      const paciente = await this.userRepository.preload({
+        id: id,
+        ...updatePacienteDto,
+      });
+      if (!paciente)
+        throw new NotFoundException(`User whith id:${id} not found`);
+      return await this.userRepository.save(paciente);
+    } catch (error) {
+      this.handleDbError(error);
+    }
   }
 
   async remove(id: string) {
     const paciente = await this.findOne(id);
     await this.userRepository.remove(paciente);
   }
+
   /* manage error */
   // el NEVER no regresa nunca un valor
   private handleDbError(error: any): never {

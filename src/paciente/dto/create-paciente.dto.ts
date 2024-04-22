@@ -2,6 +2,7 @@ import {
   IsEmail,
   IsNotEmpty,
   IsString,
+  Matches,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -20,7 +21,7 @@ export class CreatePacienteDto {
   @IsString()
   @MinLength(3)
   @MaxLength(50)
-  adress: string;
+  address: string;
 
   @IsString()
   @MaxLength(11)
@@ -30,12 +31,18 @@ export class CreatePacienteDto {
   @IsNotEmpty()
   email: string;
 
+  @IsString()
+  @IsNotEmpty()
   @IsNotEmpty()
   @MinLength(6, {
     message: 'The password must be between 6 and 12 characters ',
   })
   @MaxLength(12, {
     message: 'The password must be between 6 and 12 characters',
+  })
+  @Matches(/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])\S*$/, {
+    message:
+      'The password must have an Uppercase letter, a lowercase letter, and a number. No spaces allowed.',
   })
   password: string;
 
