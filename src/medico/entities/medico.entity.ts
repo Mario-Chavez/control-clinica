@@ -24,9 +24,9 @@ export class Medico {
   @Column('text')
   phone: string;
 
-  @Column('text', { array: true, nullable: true })
+  @Column('text', { array: true, default: ['particular'] })
   obrasSociales: string[];
 
   @ManyToMany(() => Paciente, (paciente) => paciente.medicos)
-  pacientes: Paciente[];
+  pacientes?: Paciente[];
 }

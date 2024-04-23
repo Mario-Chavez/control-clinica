@@ -5,11 +5,10 @@ import {
   PrimaryGeneratedColumn,
   BeforeInsert,
   BeforeUpdate,
-  OneToMany,
   ManyToMany,
 } from 'typeorm';
 
-@Entity('Paciente')
+@Entity('paciente')
 export class Paciente {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -18,7 +17,7 @@ export class Paciente {
   fullName: string;
 
   @Column('text')
-  birthdate: string;
+  birthdate: Date;
 
   @Column('text')
   address: string;
@@ -45,7 +44,7 @@ export class Paciente {
   isActive: boolean;
 
   @ManyToMany(() => Medico, (medico) => medico.pacientes, { eager: true })
-  medicos: Medico[];
+  medicos?: Medico[];
 
   /* guardamos en minuscalas el email */
   @BeforeInsert()

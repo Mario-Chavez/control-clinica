@@ -1,8 +1,10 @@
 import {
   ArrayNotEmpty,
+  IsArray,
   IsEmail,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsPositive,
   IsString,
   Matches,
@@ -54,4 +56,9 @@ export class CreateMedicoDto {
 
   @ArrayNotEmpty()
   obrasSociales: string[]; // Array de nombres de obras sociales
+
+  @IsString({ each: true })
+  @IsArray()
+  @IsOptional()
+  pacientes?: string[];
 }

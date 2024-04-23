@@ -12,33 +12,58 @@ import { ILike, Repository } from 'typeorm';
 
 import * as bcrypt from 'bcrypt';
 import { validate as isUUID } from 'uuid';
+import { Medico } from 'src/medico/entities/medico.entity';
 
 @Injectable()
 export class PacienteService {
   constructor(
     @InjectRepository(Paciente)
     private readonly userRepository: Repository<Paciente>,
+
+    @InjectRepository(Medico)
+    private readonly medicoRepository: Repository<Medico>,
   ) {}
 
   async create(createPacienteDto: CreatePacienteDto) {
-    const { password, address, ...pacientData } = createPacienteDto;
+    const {
+      password,
+      roles = [],
+      medicos = [],
+      ...pacientData
+    } = createPacienteDto;
 
     try {
       const paciente = this.userRepository.create({
         ...pacientData,
-        address: address.trim(),
         password: bcrypt.hashSync(password, 10),
+        medicos: medicos.map((id) => ({ id: id })),
       });
 
       await this.userRepository.save(paciente);
+      // Guardar el ID del paciente en la tabla del médico
+      // for (const medicoId of medicos) {
+      //   const medico = await this.medicoRepository.findOne(medicoId);
+      //   if (medico) {
+      //     medico.pacientes.push(paciente);
+      //     await this.medicoRepository.save(medico);
+      //   }
+      // }
+
+      // await this.pacienteRepository.save(paciente);
+      return paciente;
+
       return paciente;
     } catch (error) {
       this.handleDbError(error);
     }
   }
 
-  findAll() {
-    return this.userRepository.find();
+  async findAll() {
+    try {
+      return await this.userRepository.find();
+    } catch (error) {
+      this.handleDbError(error);
+    }
   }
 
   async findOne(term: string) {
@@ -58,17 +83,17 @@ export class PacienteService {
   }
 
   async update(id: string, updatePacienteDto: UpdatePacienteDto) {
-    try {
-      const paciente = await this.userRepository.preload({
-        id: id,
-        ...updatePacienteDto,
-      });
-      if (!paciente)
-        throw new NotFoundException(`User whith id:${id} not found`);
-      return await this.userRepository.save(paciente);
-    } catch (error) {
-      this.handleDbError(error);
-    }
+    // try {
+    //   const paciente = await this.userRepository.preload({
+    //     id: id,
+    //     ...updatePacienteDto,
+    //   });
+    //   if (!paciente)
+    //     throw new NotFoundException(`User whith id:${id} not found`);
+    //   return await this.userRepository.save(paciente);
+    // } catch (error) {
+    //   this.handleDbError(error);
+    // }
   }
 
   async remove(id: string) {

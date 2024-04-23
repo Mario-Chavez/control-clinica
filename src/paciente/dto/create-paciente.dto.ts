@@ -1,6 +1,11 @@
 import {
+  IsArray,
+  IsBoolean,
+  IsDateString,
   IsEmail,
+  IsIn,
   IsNotEmpty,
+  IsOptional,
   IsString,
   Matches,
   MaxLength,
@@ -15,14 +20,16 @@ export class CreatePacienteDto {
   fullName: string;
 
   @IsNotEmpty()
-  @IsString()
-  birthdate: string;
+  @IsDateString()
+  birthdate: Date;
 
   @IsString()
+  @IsNotEmpty()
   @MinLength(3)
   @MaxLength(50)
   address: string;
 
+  @IsNotEmpty()
   @IsString()
   @MaxLength(11)
   phone: string;
@@ -32,7 +39,6 @@ export class CreatePacienteDto {
   email: string;
 
   @IsString()
-  @IsNotEmpty()
   @IsNotEmpty()
   @MinLength(6, {
     message: 'The password must be between 6 and 12 characters ',
@@ -46,7 +52,7 @@ export class CreatePacienteDto {
   })
   password: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MinLength(2, {
     message: 'The obraSocial must be between 2 and 10 characters ',
@@ -55,4 +61,18 @@ export class CreatePacienteDto {
     message: 'The obraSocial must be between 2 and 10 characters ',
   })
   obraSocial: string;
+
+  @IsIn(['user', 'admin'], {
+    message: 'The roles must be user or admin',
+  })
+  roles?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isActive?: boolean;
+
+  @IsString({ each: true })
+  @IsArray()
+  @IsOptional()
+  medicos?: string[];
 }
