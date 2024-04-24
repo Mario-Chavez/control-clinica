@@ -1,4 +1,3 @@
-import { Medico } from 'src/medico/entities/medico.entity';
 import { PacienteMedicosRelation } from 'src/relations/entities/pacienteMedico-relation.entity';
 import {
   Entity,
@@ -34,6 +33,9 @@ export class Paciente {
 
   @Column('text')
   obraSocial: string;
+
+  @Column('numeric')
+  numAfiliado: number;
 
   @Column('text', {
     array: true,

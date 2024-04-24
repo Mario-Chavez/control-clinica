@@ -22,14 +22,17 @@ export class PacienteService {
   ) {}
 
   async create(createPacienteDto: CreatePacienteDto) {
-    const { password, roles = [], ...pacientData } = createPacienteDto;
+    const { password, ...pacientData } = createPacienteDto;
 
     try {
-      // const paciente = this.userRepository.create({
-      //   ...pacientData,
-      //   password: bcrypt.hashSync(password, 10),
-      // });
-      // return paciente;
+      const paciente = this.userRepository.create({
+        ...pacientData,
+        password: bcrypt.hashSync(password, 10),
+      });
+
+      await this.userRepository.save(paciente);
+
+      return paciente;
     } catch (error) {
       this.handleDbError(error);
     }
@@ -60,17 +63,17 @@ export class PacienteService {
   }
 
   async update(id: string, updatePacienteDto: UpdatePacienteDto) {
-    // try {
-    //   const paciente = await this.userRepository.preload({
-    //     id: id,
-    //     ...updatePacienteDto,
-    //   });
-    //   if (!paciente)
-    //     throw new NotFoundException(`User whith id:${id} not found`);
-    //   return await this.userRepository.save(paciente);
-    // } catch (error) {
-    //   this.handleDbError(error);
-    // }
+    try {
+      const paciente = await this.userRepository.preload({
+        id: id,
+        ...updatePacienteDto,
+      });
+      if (!paciente)
+        throw new NotFoundException(`User whith id:${id} not found`);
+      return await this.userRepository.save(paciente);
+    } catch (error) {
+      this.handleDbError(error);
+    }
   }
 
   async remove(id: string) {

@@ -1,4 +1,5 @@
 import {
+  ArrayNotEmpty,
   IsArray,
   IsBoolean,
   IsDateString,
@@ -13,6 +14,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { PacienteMedicosRelation } from '../../relations/entities/pacienteMedico-relation.entity';
 
 export class CreatePacienteDto {
   @IsNotEmpty()
@@ -69,10 +71,14 @@ export class CreatePacienteDto {
   @IsPositive()
   numAfiliado: number;
 
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsString({ each: true })
   @IsIn(['user', 'admin'], {
-    message: 'The roles must be user or admin',
+    each: true,
+    message: 'Each role must be user or admin',
   })
-  roles?: string;
+  roles: string[];
 
   @IsBoolean()
   @IsOptional()
@@ -81,5 +87,5 @@ export class CreatePacienteDto {
   @IsString()
   @IsArray()
   @IsOptional()
-  medicosIncludes?: string[];
+  medicosIncludes?: PacienteMedicosRelation[];
 }
