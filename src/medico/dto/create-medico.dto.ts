@@ -1,7 +1,9 @@
 import {
   ArrayNotEmpty,
   IsArray,
+  IsBoolean,
   IsEmail,
+  IsIn,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -40,12 +42,12 @@ export class CreateMedicoDto {
 
   @IsString()
   @IsNotEmpty()
+  @MaxLength(40)
+  @MinLength(3)
   especialty: string;
 
   @IsNotEmpty()
   @IsNumber()
-  @MaxLength(8)
-  @MinLength(5)
   @IsPositive()
   matricula: number;
 
@@ -55,7 +57,20 @@ export class CreateMedicoDto {
   phone: string;
 
   @ArrayNotEmpty()
-  obrasSociales: string[]; // Array de nombres de obras sociales
+  obrasSociales: string[];
+
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsString({ each: true })
+  @IsIn(['user', 'admin', 'doctor'], {
+    each: true,
+    message: 'Each role must be user or admin',
+  })
+  roles: string[];
+
+  @IsBoolean()
+  @IsOptional()
+  isActive?: boolean;
 
   @IsString({ each: true })
   @IsArray()

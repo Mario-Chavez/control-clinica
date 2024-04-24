@@ -12,7 +12,6 @@ import { ILike, Repository } from 'typeorm';
 
 import * as bcrypt from 'bcrypt';
 import { validate as isUUID } from 'uuid';
-import { Medico } from 'src/medico/entities/medico.entity';
 
 @Injectable()
 export class PacienteService {

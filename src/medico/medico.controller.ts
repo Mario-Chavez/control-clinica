@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseUUIDPipe,
+} from '@nestjs/common';
 import { MedicoService } from './medico.service';
 import { CreateMedicoDto } from './dto/create-medico.dto';
 import { UpdateMedicoDto } from './dto/update-medico.dto';
@@ -17,18 +26,21 @@ export class MedicoController {
     return this.medicoService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.medicoService.findOne(+id);
+  @Get(':term')
+  findOne(@Param('term') term: string) {
+    return this.medicoService.findOne(term);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMedicoDto: UpdateMedicoDto) {
-    return this.medicoService.update(+id, updateMedicoDto);
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateMedicoDto: UpdateMedicoDto,
+  ) {
+    return this.medicoService.update(id, updateMedicoDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.medicoService.remove(+id);
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    return this.medicoService.remove(id);
   }
 }

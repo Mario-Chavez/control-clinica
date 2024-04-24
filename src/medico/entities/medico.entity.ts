@@ -13,10 +13,10 @@ export class Medico {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('text')
+  @Column('text', { unique: true })
   email: string;
 
-  @Column('text')
+  @Column('text', { select: false })
   password: string;
 
   @Column('text')
@@ -33,6 +33,15 @@ export class Medico {
 
   @Column('text', { array: true, default: ['particular'] })
   obrasSociales: string[];
+
+  @Column('text', {
+    array: true,
+    default: ['doctor'],
+  })
+  roles: string[];
+
+  @Column('bool', { default: true })
+  isActive: boolean;
 
   @OneToMany(() => PacienteMedicosRelation, (paciente) => paciente.paciente)
   pacientesIncludes: PacienteMedicosRelation[];

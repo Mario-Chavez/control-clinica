@@ -74,7 +74,7 @@ export class CreatePacienteDto {
   @IsArray()
   @ArrayNotEmpty()
   @IsString({ each: true })
-  @IsIn(['user', 'admin'], {
+  @IsIn(['user', 'admin', 'doctor'], {
     each: true,
     message: 'Each role must be user or admin',
   })
