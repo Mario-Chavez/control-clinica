@@ -1,11 +1,12 @@
 import { Medico } from 'src/medico/entities/medico.entity';
+import { PacienteMedicosRelation } from 'src/relations/entities/pacienteMedico-relation.entity';
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
   BeforeInsert,
   BeforeUpdate,
-  ManyToMany,
+  OneToMany,
 } from 'typeorm';
 
 @Entity('paciente')
@@ -43,8 +44,8 @@ export class Paciente {
   @Column('bool', { default: true })
   isActive: boolean;
 
-  @ManyToMany(() => Medico, (medico) => medico.pacientes, { eager: true })
-  medicos?: Medico[];
+  @OneToMany(() => PacienteMedicosRelation, (medico) => medico.medico)
+  medicosIncludes: PacienteMedicosRelation[];
 
   /* guardamos en minuscalas el email */
   @BeforeInsert()

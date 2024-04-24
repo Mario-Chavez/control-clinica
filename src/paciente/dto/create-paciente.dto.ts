@@ -5,7 +5,9 @@ import {
   IsEmail,
   IsIn,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
+  IsPositive,
   IsString,
   Matches,
   MaxLength,
@@ -52,7 +54,7 @@ export class CreatePacienteDto {
   })
   password: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   @MinLength(2, {
     message: 'The obraSocial must be between 2 and 10 characters ',
@@ -61,6 +63,11 @@ export class CreatePacienteDto {
     message: 'The obraSocial must be between 2 and 10 characters ',
   })
   obraSocial: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @IsPositive()
+  numAfiliado: number;
 
   @IsIn(['user', 'admin'], {
     message: 'The roles must be user or admin',
@@ -71,8 +78,8 @@ export class CreatePacienteDto {
   @IsOptional()
   isActive?: boolean;
 
-  @IsString({ each: true })
+  @IsString()
   @IsArray()
   @IsOptional()
-  medicos?: string[];
+  medicosIncludes?: string[];
 }

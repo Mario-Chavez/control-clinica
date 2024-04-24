@@ -19,40 +19,17 @@ export class PacienteService {
   constructor(
     @InjectRepository(Paciente)
     private readonly userRepository: Repository<Paciente>,
-
-    @InjectRepository(Medico)
-    private readonly medicoRepository: Repository<Medico>,
   ) {}
 
   async create(createPacienteDto: CreatePacienteDto) {
-    const {
-      password,
-      roles = [],
-      medicos = [],
-      ...pacientData
-    } = createPacienteDto;
+    const { password, roles = [], ...pacientData } = createPacienteDto;
 
     try {
-      const paciente = this.userRepository.create({
-        ...pacientData,
-        password: bcrypt.hashSync(password, 10),
-        medicos: medicos.map((id) => ({ id: id })),
-      });
-
-      await this.userRepository.save(paciente);
-      // Guardar el ID del paciente en la tabla del médico
-      // for (const medicoId of medicos) {
-      //   const medico = await this.medicoRepository.findOne(medicoId);
-      //   if (medico) {
-      //     medico.pacientes.push(paciente);
-      //     await this.medicoRepository.save(medico);
-      //   }
-      // }
-
-      // await this.pacienteRepository.save(paciente);
-      return paciente;
-
-      return paciente;
+      // const paciente = this.userRepository.create({
+      //   ...pacientData,
+      //   password: bcrypt.hashSync(password, 10),
+      // });
+      // return paciente;
     } catch (error) {
       this.handleDbError(error);
     }

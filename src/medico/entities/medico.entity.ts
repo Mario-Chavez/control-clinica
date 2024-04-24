@@ -1,5 +1,12 @@
 import { Paciente } from 'src/paciente/entities/paciente.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
+import { PacienteMedicosRelation } from 'src/relations/entities/pacienteMedico-relation.entity';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToMany,
+  OneToMany,
+} from 'typeorm';
 
 @Entity('Medico')
 export class Medico {
@@ -27,6 +34,6 @@ export class Medico {
   @Column('text', { array: true, default: ['particular'] })
   obrasSociales: string[];
 
-  @ManyToMany(() => Paciente, (paciente) => paciente.medicos)
-  pacientes?: Paciente[];
+  @OneToMany(() => PacienteMedicosRelation, (paciente) => paciente.paciente)
+  pacientesIncludes: PacienteMedicosRelation[];
 }

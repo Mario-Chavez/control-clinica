@@ -7,6 +7,7 @@ import { MedicoModule } from './medico/medico.module';
 import { AdministradorModule } from './administrador/administrador.module';
 import { TurnoModule } from './turno/turno.module';
 import { HistoriaclinicaModule } from './historiaclinica/historiaclinica.module';
+import { RelationsModule } from './relations/relations.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { HistoriaclinicaModule } from './historiaclinica/historiaclinica.module'
     AdministradorModule,
     TurnoModule,
     HistoriaclinicaModule,
+    RelationsModule,
   ],
   controllers: [],
   providers: [],
