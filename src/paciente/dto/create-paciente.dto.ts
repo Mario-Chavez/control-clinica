@@ -84,6 +84,15 @@ export class CreatePacienteDto {
   @IsOptional()
   isActive?: boolean;
 
+  @IsOptional()
+  @IsArray()
+  @ArrayNotEmpty()
+  historialMedico?: string[];
+
+  @IsString()
+  @IsNotEmpty()
+  dni: string;
+
   @IsString()
   @IsArray()
   @IsOptional()

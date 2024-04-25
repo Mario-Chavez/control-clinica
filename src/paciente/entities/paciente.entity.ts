@@ -46,6 +46,18 @@ export class Paciente {
   @Column('bool', { default: true })
   isActive: boolean;
 
+  @Column('text', {
+    array: true,
+    default: [],
+  })
+  historialMedico: string[];
+
+  @Column('text', {
+    unique: true,
+    nullable: true,
+  })
+  dni: string;
+
   @OneToMany(() => PacienteMedicosRelation, (medico) => medico.medico)
   medicosIncludes: PacienteMedicosRelation[];
 
