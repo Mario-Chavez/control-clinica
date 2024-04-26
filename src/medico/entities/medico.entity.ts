@@ -1,5 +1,6 @@
 import { Paciente } from 'src/paciente/entities/paciente.entity';
 import { PacienteMedicosRelation } from 'src/relations/entities/pacienteMedico-relation.entity';
+import { Turno } from 'src/turnos/entities/turno.entity';
 import {
   Entity,
   Column,
@@ -45,4 +46,7 @@ export class Medico {
 
   @OneToMany(() => PacienteMedicosRelation, (paciente) => paciente.paciente)
   pacientesIncludes: PacienteMedicosRelation[];
+
+  @OneToMany(() => Turno, (turno) => turno.medico)
+  turnos: Turno[];
 }

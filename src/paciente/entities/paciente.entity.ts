@@ -1,4 +1,5 @@
 import { PacienteMedicosRelation } from 'src/relations/entities/pacienteMedico-relation.entity';
+import { Turno } from 'src/turnos/entities/turno.entity';
 import {
   Entity,
   Column,
@@ -52,14 +53,14 @@ export class Paciente {
   })
   historialMedico: string[];
 
-  @Column('text', {
-    unique: true,
-    nullable: true,
-  })
+  @Column('text', { unique: true })
   dni: string;
 
   @OneToMany(() => PacienteMedicosRelation, (medico) => medico.medico)
   medicosIncludes: PacienteMedicosRelation[];
+
+  @OneToMany(() => Turno, (turno) => turno.paciente)
+  turnos: Turno[];
 
   /* guardamos en minuscalas el email */
   @BeforeInsert()

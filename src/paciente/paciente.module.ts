@@ -4,15 +4,15 @@ import { PacienteController } from './paciente.controller';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Paciente } from './entities/paciente.entity';
-import { MedicoModule } from 'src/medico/medico.module';
 import { PacienteMedicosRelation } from 'src/relations/entities/pacienteMedico-relation.entity';
+import { Turno } from 'src/turnos/entities/turno.entity';
 
 @Module({
   controllers: [PacienteController],
   providers: [PacienteService],
   imports: [
     ConfigModule,
-    TypeOrmModule.forFeature([Paciente, PacienteMedicosRelation]),
+    TypeOrmModule.forFeature([Paciente, PacienteMedicosRelation, Turno]),
   ],
   exports: [TypeOrmModule],
 })
