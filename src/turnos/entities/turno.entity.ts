@@ -19,6 +19,6 @@ export class Turno {
   @ManyToOne(() => Medico, (medico) => medico.turnos)
   medicoId: Medico;
 
-  @ManyToOne(() => Paciente, (paciente) => paciente.turnos)
-  pacienteId: Paciente;
+  @ManyToOne(() => Paciente, (paciente) => paciente.turnos, { nullable: true })
+  pacienteId?: Paciente;
 }

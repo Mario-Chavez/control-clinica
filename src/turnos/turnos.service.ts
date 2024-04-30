@@ -41,7 +41,25 @@ export class TurnosService {
     });
   }
   async findOne(id: string) {
-    const turno = await this.turnoRepository.findOneBy({ id });
+    const turno = await this.turnoRepository
+      .createQueryBuilder('turno')
+      .where('turno.id = :id', { id })
+      .leftJoinAndSelect('turno.medicoId', 'medico')
+      .leftJoinAndSelect('turno.pacienteId', 'paciente')
+      .select([
+        'turno.id',
+        'turno.date',
+        'turno.hour',
+        'turno.isConfirmed',
+        'medico.fullName', // Seleccionar solo el nombre del medico
+        'medico.matricula',
+        'medico.especialty', // Seleccionar solo la especialidad del medico
+        'paciente.fullName', // Seleccionar solo el nombre del paciente
+        'paciente.dni',
+        'paciente.numAfiliado',
+        'paciente.obraSocial', // Seleccionar solo obra social
+      ])
+      .getOne();
     if (!turno) {
       throw new Error(`Turno con id ${id} no encontrado`);
     }

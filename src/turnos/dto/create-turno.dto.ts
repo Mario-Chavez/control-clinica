@@ -3,6 +3,7 @@ import {
   IsDate,
   IsDateString,
   IsNotEmpty,
+  IsOptional,
   IsString,
   IsUUID,
   Matches,
@@ -24,8 +25,10 @@ export class CreateTurnoDto {
   isConfirmed: boolean;
 
   @IsUUID()
+  @IsNotEmpty()
   medicoId: Medico;
 
   @IsUUID()
+  @IsOptional()
   pacienteId: Paciente;
 }
