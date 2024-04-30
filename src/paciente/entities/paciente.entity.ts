@@ -59,7 +59,7 @@ export class Paciente {
   @OneToMany(() => PacienteMedicosRelation, (medico) => medico.medico)
   medicosIncludes: PacienteMedicosRelation[];
 
-  @OneToMany(() => Turno, (turno) => turno.paciente)
+  @OneToMany(() => Turno, (turno) => turno.pacienteId)
   turnos: Turno[];
 
   /* guardamos en minuscalas el email */

@@ -18,7 +18,21 @@ export class TurnosService {
   }
 
   async findAll() {
-    return await this.turnoRepository.find();
+    return await this.turnoRepository
+      .createQueryBuilder('turno')
+      .leftJoinAndSelect('turno.medicoId', 'medico')
+      .leftJoinAndSelect('turno.pacienteId', 'paciente')
+      .select([
+        'turno.id',
+        'turno.date',
+        'turno.hour',
+        'turno.isConfirmed',
+        'medico.fullName', // Seleccionar solo el nombre del medico
+        'medico.especialty', // Seleccionar solo la especialidad del medico
+        'paciente.fullName', // Seleccionar solo el nombre del paciente
+        'paciente.obraSocial', // Seleccionar solo obra social
+      ])
+      .getMany();
   }
 
   async turnoDisponible() {

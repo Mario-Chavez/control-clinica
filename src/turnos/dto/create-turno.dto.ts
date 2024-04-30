@@ -3,7 +3,9 @@ import {
   IsDate,
   IsDateString,
   IsNotEmpty,
+  IsString,
   IsUUID,
+  Matches,
 } from 'class-validator';
 import { Medico } from 'src/medico/entities/medico.entity';
 import { Paciente } from 'src/paciente/entities/paciente.entity';
@@ -13,16 +15,17 @@ export class CreateTurnoDto {
   @IsNotEmpty()
   date: Date;
 
-  @IsDateString()
+  @IsString()
   @IsNotEmpty()
-  hour: Date;
+  @Matches(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/) // // Validar el formato de hora (HH:mm)
+  hour: string;
 
   @IsBoolean()
   isConfirmed: boolean;
 
   @IsUUID()
-  medico: Medico;
+  medicoId: Medico;
 
   @IsUUID()
-  paciente: Paciente;
+  pacienteId: Paciente;
 }
