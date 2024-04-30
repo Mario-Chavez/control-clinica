@@ -36,9 +36,17 @@ export class TurnosService {
   }
 
   async turnoDisponible() {
-    return await this.turnoRepository.find({
-      where: { isConfirmed: false },
-    });
+    return await this.turnoRepository
+      .createQueryBuilder('turno')
+      .where('turno.isConfirmed = :isConfirmed', { isConfirmed: false })
+      .leftJoinAndSelect('turno.medicoId', 'medico')
+      .select([
+        'turno.date',
+        'turno.hour',
+        'medico.fullName', // Seleccionar solo el nombre del medico
+        'medico.especialty', // Seleccionar solo la especialidad del medico
+      ])
+      .getMany();
   }
   async findOne(id: string) {
     const turno = await this.turnoRepository
@@ -67,9 +75,13 @@ export class TurnosService {
   }
 
   async update(id: string, updateTurnoDto: UpdateTurnoDto) {
+    const { isConfirmed, ...dataTurno } = updateTurnoDto;
+    const pacienteId = isConfirmed ? updateTurnoDto.pacienteId : null; // borra la relacion del paciente si el turno no es confirmado
     const turno = await this.turnoRepository.preload({
       id: id,
-      ...updateTurnoDto,
+      ...dataTurno,
+      pacienteId: pacienteId,
+      isConfirmed: isConfirmed,
     });
     if (!turno) {
       throw new Error(`Turno con id ${id} no encontrado`);
