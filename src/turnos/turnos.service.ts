@@ -10,9 +10,7 @@ export class TurnosService {
   constructor(
     @InjectRepository(Turno)
     private readonly turnoRepository: Repository<Turno>,
-  ) {
-    this.cleanOldShifts();
-  }
+  ) {}
 
   async create(createTurnoDto: CreateTurnoDto) {
     const turno = this.turnoRepository.create(createTurnoDto);
@@ -20,6 +18,9 @@ export class TurnosService {
   }
 
   async findAll() {
+    // cleanOldShifts() limpia los turno antiguos
+    await this.cleanOldShifts();
+
     return await this.turnoRepository
       .createQueryBuilder('turno')
       .leftJoinAndSelect('turno.medicoId', 'medico')
