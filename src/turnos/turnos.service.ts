@@ -10,7 +10,9 @@ export class TurnosService {
   constructor(
     @InjectRepository(Turno)
     private readonly turnoRepository: Repository<Turno>,
-  ) {}
+  ) {
+    this.cleanOldShifts();
+  }
 
   async create(createTurnoDto: CreateTurnoDto) {
     const turno = this.turnoRepository.create(createTurnoDto);
@@ -43,6 +45,7 @@ export class TurnosService {
       .select([
         'turno.date',
         'turno.hour',
+        'turno.isConfirmed',
         'medico.fullName', // Seleccionar solo el nombre del medico
         'medico.especialty', // Seleccionar solo la especialidad del medico
       ])
@@ -75,12 +78,11 @@ export class TurnosService {
   }
 
   async update(id: string, updateTurnoDto: UpdateTurnoDto) {
-    const { isConfirmed, ...dataTurno } = updateTurnoDto;
-    const pacienteId = isConfirmed ? updateTurnoDto.pacienteId : null; // borra la relacion del paciente si el turno no es confirmado
+    const { isConfirmed, pacienteId, ...dataTurno } = updateTurnoDto;
     const turno = await this.turnoRepository.preload({
       id: id,
       ...dataTurno,
-      pacienteId: pacienteId,
+      pacienteId: isConfirmed ? pacienteId : null,
       isConfirmed: isConfirmed,
     });
     if (!turno) {
@@ -92,5 +94,24 @@ export class TurnosService {
   async remove(id: string) {
     const turno = await this.findOne(id);
     return await this.turnoRepository.remove(turno);
+  }
+
+  /* old turnos */
+  async cleanOldShifts() {
+    try {
+      const fechaLimite = new Date();
+
+      fechaLimite.setDate(fechaLimite.getDate() - 1); // se eliminaran los datos pasado los 7 dias
+
+      const resultado = await this.turnoRepository
+        .createQueryBuilder()
+        .delete()
+        .where('date < :fechaLimite', { fechaLimite })
+        .execute();
+
+      console.log(`Se eliminaron ${resultado.affected} turnos antiguos.`);
+    } catch (error) {
+      console.error('Error al limpiar turnos antiguos:', error);
+    }
   }
 }
