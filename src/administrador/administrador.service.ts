@@ -39,11 +39,16 @@ export class AdministradorService {
   }
 
   async findOne(id: string) {
+    let admin: Administrador;
     try {
-      return await this.administradorRepository.findOneBy({ id });
+      admin = await this.administradorRepository.findOneBy({ id });
     } catch (error) {
       this.handleDbError(error);
     }
+    if (!admin) {
+      throw new NotFoundException(`Administrador whith id:${id} not found`);
+    }
+    return admin;
   }
 
   async update(id: string, updateAdministradorDto: UpdateAdministradorDto) {
