@@ -64,7 +64,7 @@ export class CreateMedicoDto {
   @IsString({ each: true })
   @IsIn(['user', 'admin', 'doctor'], {
     each: true,
-    message: 'Each role must be user or admin',
+    message: 'Each role must be user , admin or doctor',
   })
   roles: string[];
 

@@ -102,7 +102,7 @@ export class TurnosService {
     try {
       const fechaLimite = new Date();
 
-      fechaLimite.setDate(fechaLimite.getDate() - 1); // se eliminaran los datos pasado los 7 dias
+      fechaLimite.setDate(fechaLimite.getDate() - 7); // se eliminaran los datos pasado los 7 dias
 
       const resultado = await this.turnoRepository
         .createQueryBuilder()
