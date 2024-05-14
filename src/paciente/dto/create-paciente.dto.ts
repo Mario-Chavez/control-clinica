@@ -78,7 +78,8 @@ export class CreatePacienteDto {
     each: true,
     message: 'Each role must be user or admin',
   })
-  roles: string[];
+  @IsOptional()
+  roles?: string[];
 
   @IsBoolean()
   @IsOptional()
