@@ -4,6 +4,7 @@ import {
   IsEmail,
   IsIn,
   IsNotEmpty,
+  IsOptional,
   IsString,
   Matches,
   MaxLength,
@@ -47,5 +48,6 @@ export class CreateAdministradorDto {
     each: true,
     message: 'Each role must be user , admin or doctor',
   })
-  roles: string[];
+  @IsOptional()
+  roles?: string[];
 }
