@@ -26,7 +26,7 @@ export class PacienteController {
     return this.pacienteService.create(createPacienteDto);
   }
 
-  @Roles(Role.DOCTOR)
+  @Roles(Role.USER)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   findAll() {
