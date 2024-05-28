@@ -8,12 +8,13 @@ import { Paciente } from 'src/paciente/entities/paciente.entity';
 import { Medico } from 'src/medico/entities/medico.entity';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { Administrador } from 'src/administrador/entities/administrador.entity';
 
 @Module({
   controllers: [AuthController],
   imports: [
     ConfigModule,
-    TypeOrmModule.forFeature([Paciente, Medico]),
+    TypeOrmModule.forFeature([Paciente, Medico, Administrador]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       imports: [ConfigModule],

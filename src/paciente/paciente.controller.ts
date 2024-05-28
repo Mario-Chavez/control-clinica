@@ -13,6 +13,9 @@ import { PacienteService } from './paciente.service';
 import { CreatePacienteDto } from './dto/create-paciente.dto';
 import { UpdatePacienteDto } from './dto/update-paciente.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Roles } from 'src/auth/decorator/roles.decorator';
+import { Role } from 'src/auth/enums/rol.enum';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 @Controller('paciente')
 export class PacienteController {
@@ -23,7 +26,8 @@ export class PacienteController {
     return this.pacienteService.create(createPacienteDto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.DOCTOR)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   findAll() {
     return this.pacienteService.findAll();
