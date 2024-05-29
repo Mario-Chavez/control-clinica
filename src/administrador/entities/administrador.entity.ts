@@ -19,4 +19,7 @@ export class Administrador {
     default: ['admin'],
   })
   roles: string[];
+
+  @Column('bool', { default: true })
+  isActive: boolean;
 }

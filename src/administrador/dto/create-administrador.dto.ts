@@ -1,6 +1,7 @@
 import {
   ArrayNotEmpty,
   IsArray,
+  IsBoolean,
   IsEmail,
   IsIn,
   IsNotEmpty,
@@ -50,4 +51,8 @@ export class CreateAdministradorDto {
   })
   @IsOptional()
   roles?: string[];
+
+  @IsBoolean()
+  @IsOptional()
+  isActive?: boolean;
 }
