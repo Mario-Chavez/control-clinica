@@ -30,11 +30,12 @@ export class PacienteController {
     return this.pacienteService.findAll();
   }
 
-  @Auth(Role.ADMIN)
+  @Auth(Role.ADMIN, Role.USER, Role.DOCTOR)
   @Get(':term')
   findOne(@Param('term') term: string) {
     return this.pacienteService.findOne(term);
   }
+
   @Auth(Role.ADMIN, Role.USER)
   @Patch(':id')
   update(
