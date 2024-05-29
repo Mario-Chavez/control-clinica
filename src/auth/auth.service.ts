@@ -26,6 +26,7 @@ export class AuthService {
 
     // Buscar usuario en todas las tablas
     const user = await this.findUserByEmail(email);
+
     if (!user) throw new UnauthorizedException('Credentials not valid (email)');
 
     // Verificar la contraseña

@@ -16,6 +16,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Roles } from 'src/auth/decorator/roles.decorator';
 import { Role } from 'src/auth/enums/rol.enum';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Auth } from 'src/auth/decorator/auth.decorator';
 
 @Controller('paciente')
 export class PacienteController {
@@ -26,8 +27,7 @@ export class PacienteController {
     return this.pacienteService.create(createPacienteDto);
   }
 
-  @Roles(Role.USER)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Auth(Role.ADMIN) //custom decorator
   @Get()
   findAll() {
     return this.pacienteService.findAll();
