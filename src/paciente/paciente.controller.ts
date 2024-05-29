@@ -12,10 +12,7 @@ import {
 import { PacienteService } from './paciente.service';
 import { CreatePacienteDto } from './dto/create-paciente.dto';
 import { UpdatePacienteDto } from './dto/update-paciente.dto';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { Roles } from 'src/auth/decorator/roles.decorator';
 import { Role } from 'src/auth/enums/rol.enum';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Auth } from 'src/auth/decorator/auth.decorator';
 
 @Controller('paciente')
@@ -33,11 +30,12 @@ export class PacienteController {
     return this.pacienteService.findAll();
   }
 
+  @Auth(Role.ADMIN)
   @Get(':term')
   findOne(@Param('term') term: string) {
     return this.pacienteService.findOne(term);
   }
-
+  @Auth(Role.ADMIN, Role.USER)
   @Patch(':id')
   update(
     @Param('id', ParseUUIDPipe) id: string,
@@ -46,6 +44,7 @@ export class PacienteController {
     return this.pacienteService.update(id, updatePacienteDto);
   }
 
+  @Auth(Role.ADMIN, Role.USER)
   @Delete(':id')
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.pacienteService.remove(id);
