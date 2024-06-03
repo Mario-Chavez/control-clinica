@@ -36,7 +36,7 @@ export class PacienteController {
     return this.pacienteService.findOne(term);
   }
 
-  @Auth(Role.ADMIN, Role.USER)
+  @Auth(Role.ADMIN, Role.USER, Role.DOCTOR)
   @Patch(':id')
   update(
     @Param('id', ParseUUIDPipe) id: string,

@@ -80,6 +80,7 @@ export class TurnosService {
 
   async update(id: string, updateTurnoDto: UpdateTurnoDto) {
     const { isConfirmed, pacienteId, ...dataTurno } = updateTurnoDto;
+
     const turno = await this.turnoRepository.preload({
       id: id,
       ...dataTurno,
