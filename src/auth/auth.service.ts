@@ -41,6 +41,7 @@ export class AuthService {
     const token = this.getJwtToken(payload);
 
     return {
+      id: user.id,
       token,
     };
   }
