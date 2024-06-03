@@ -61,8 +61,8 @@ export class CreatePacienteDto {
   @MinLength(2, {
     message: 'The obraSocial must be between 2 and 10 characters ',
   })
-  @MaxLength(10, {
-    message: 'The obraSocial must be between 2 and 10 characters ',
+  @MaxLength(20, {
+    message: 'The obraSocial must be between 2 and 20 characters ',
   })
   obraSocial: string;
 
