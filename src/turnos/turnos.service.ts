@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTurnoDto } from './dto/create-turno.dto';
 import { UpdateTurnoDto } from './dto/update-turno.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { Turno } from './entities/turno.entity';
+import { isUUID } from 'class-validator';
 
 @Injectable()
 export class TurnosService {
@@ -19,7 +20,7 @@ export class TurnosService {
 
   async findAll() {
     // cleanOldShifts() limpia los turno antiguos
-    await this.cleanOldShifts();
+    // await this.cleanOldShifts();
 
     return await this.turnoRepository
       .createQueryBuilder('turno')
@@ -37,7 +38,38 @@ export class TurnosService {
       ])
       .getMany();
   }
+  /* busca con partes del nombre del medico los turnos activos */
+  async findTurnosByDateAndMedico(
+    date: string,
+    medicoName: string,
+  ): Promise<Turno[]> {
+    const turnos = await this.turnoRepository
+      .createQueryBuilder('turno')
+      .leftJoinAndSelect('turno.medicoId', 'medico')
+      .where('turno.date = :date', { date })
+      .andWhere('medico.fullName ILIKE :medicoName', {
+        medicoName: `%${medicoName}%`,
+      })
+      .andWhere('turno.isConfirmed = :isConfirmed', { isConfirmed: false })
+      .select([
+        'turno.date',
+        'turno.hour',
+        'turno.isConfirmed',
+        'medico.fullName',
+        'medico.especialty',
+      ])
+      .getMany();
 
+    if (!turnos.length) {
+      throw new NotFoundException(
+        `No available turnos found for medico: ${medicoName} on date: ${date}`,
+      );
+    }
+
+    return turnos;
+  }
+
+  /* turnos sin reserva */
   async turnoDisponible() {
     return await this.turnoRepository
       .createQueryBuilder('turno')
@@ -98,22 +130,23 @@ export class TurnosService {
     return await this.turnoRepository.remove(turno);
   }
 
+  /* continuar con eliminar turnos */
   /* old turnos */
-  async cleanOldShifts() {
-    try {
-      const fechaLimite = new Date();
+  // async cleanOldShifts() {
+  //   try {
+  //     const fechaLimite = new Date();
 
-      fechaLimite.setDate(fechaLimite.getDate() - 7); // se eliminaran los datos pasado los 7 dias
+  //     fechaLimite.setDate(fechaLimite.getDate() - 7); // se eliminaran los datos pasado los 7 dias
 
-      const resultado = await this.turnoRepository
-        .createQueryBuilder()
-        .delete()
-        .where('date < :fechaLimite', { fechaLimite })
-        .execute();
+  //     const resultado = await this.turnoRepository
+  //       .createQueryBuilder()
+  //       .delete()
+  //       .where('date < :fechaLimite', { fechaLimite })
+  //       .execute();
 
-      console.log(`Se eliminaron ${resultado.affected} turnos antiguos.`);
-    } catch (error) {
-      console.error('Error al limpiar turnos antiguos:', error);
-    }
-  }
+  //     console.log(`Se eliminaron ${resultado.affected} turnos antiguos.`);
+  //   } catch (error) {
+  //     console.error('Error al limpiar turnos antiguos:', error);
+  //   }
+  // }
 }

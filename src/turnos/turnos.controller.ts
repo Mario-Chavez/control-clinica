@@ -37,6 +37,15 @@ export class TurnosController {
   }
 
   @Auth(Role.ADMIN, Role.DOCTOR, Role.USER)
+  @Get('available/:date/:medicoName')
+  findMedicosTurnos(
+    @Param('medicoName') medicoName: string,
+    @Param('date') date: string,
+  ) {
+    return this.turnosService.findTurnosByDateAndMedico(date, medicoName);
+  }
+
+  @Auth(Role.ADMIN, Role.DOCTOR, Role.USER)
   @Get(':id')
   findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.turnosService.findOne(id);
